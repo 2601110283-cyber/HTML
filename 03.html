@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRIDE : Step to Master</title>
+    <style>
+        :root {
+            --bg-main: #0B0F19;
+            --card-bg: #111827;
+            --card-border: #1F2937;
+            --text-main: #F3F4F6;
+            --text-muted: #9CA3AF;
+            --accent-cyan: #00F2FE;
+            --accent-teal: #10B981;
+            --accent-orange: #F97316;
+            --accent-purple: #A855F7;
+            --accent-red: #EF4444;
+            --glass-bg: rgba(11, 15, 25, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Malgun Gothic', sans-serif; line-height: 1.6; background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; }
+
+        header { background-color: var(--glass-bg); backdrop-filter: blur(16px); padding: 1.2rem 0; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--card-border); transition: transform 0.35s ease; }
+        header.hide-header { transform: translateY(-100%); }
+        header a { text-decoration: none; } 
+        .header-container { display: flex; justify-content: space-between; align-items: center; width: 90%; max-width: 1250px; margin: auto; }
+        header h1 { color: var(--accent-cyan); font-weight: 900; font-size: 1.8rem; letter-spacing: -1px; font-style: italic; text-shadow: 0 0 15px rgba(0,242,254,0.4); }
+        
+        nav ul { list-style: none; display: flex; gap: 24px; flex-wrap: wrap; }
+        nav a { color: var(--text-main); font-weight: 700; font-size: 0.82rem; transition: color 0.2s; letter-spacing: 1px; }
+        nav a:hover { color: var(--accent-cyan); }
+
+        .hero-section { position: relative; height: 420px; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; background: #05070d; }
+        .hero-bg-slider { position: absolute; top: -5%; left: -5%; width: 110%; height: 110%; z-index: 1; filter: blur(6px) brightness(0.5); }
+        .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; animation: bgFadeInOut 18s infinite ease-in-out; }
+        
+        .hero-slide-1 { background-image: url('image/running.avif'); animation-delay: 0s; }
+        .hero-slide-2 { background-image: url('image/running2.jpg'); animation-delay: 6s; }
+        .hero-slide-3 { background-image: url('image/running3.jpg'); animation-delay: 12s; }
+
+        @keyframes bgFadeInOut { 0% {opacity:0; transform:scale(1);} 10% {opacity:1;} 33% {opacity:1;} 43% {opacity:0; transform:scale(1.08);} 100% {opacity:0;} }
+
+        .hero-content { position: relative; z-index: 2; padding: 0 20px; }
+        .hero-content h2 { font-size: 3.2rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; color: #fff; }
+        .hero-content p { font-size: 1.2rem; color: var(--text-muted); }
+
+        .content-section { padding: 90px 6%; max-width: 1300px; margin: auto; }
+        .sec-header { text-align: left; margin-bottom: 35px; }
+        .sec-num { font-family: monospace; color: var(--accent-cyan); font-size: 0.85rem; font-weight: 800; letter-spacing: 2px; }
+        .sec-title { font-size: 2.1rem; font-weight: 900; color: #fff; margin: 4px 0 10px 0; letter-spacing: -0.5px; }
+        .sec-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+        .sec-bar { width: 45px; height: 6px; background: var(--accent-cyan); margin-top: 15px; box-shadow: 0 0 10px var(--accent-cyan); }
+
+        .cyber-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; }
+        .stack-grid { display: flex; flex-direction: column; gap: 25px; } 
+        .cyber-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 30px; position: relative; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+
+        .manual-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; display: flex; flex-direction: column; gap: 30px; }
+        .manual-item { padding-left: 20px; }
+        .manual-item h4 { font-size: 1.15rem; margin-bottom: 6px; font-weight: 800; letter-spacing: -0.3px; }
+        .manual-item p { font-size: 0.95rem; color: var(--text-muted); }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.82rem; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; text-transform: uppercase; }
+        .form-input { width: 100%; background: #1F2937; border: 1px solid #374151; color: #fff; padding: 12px 16px; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border 0.2s; }
+        .form-input:focus { border-color: var(--accent-cyan); }
+
+        .btn-action { width: 100%; background: transparent; border: 1px solid var(--card-border); color: var(--text-main); padding: 14px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
+        .btn-action:hover { background: #1F2937; border-color: var(--accent-cyan); color: var(--accent-cyan); }
+
+        .log-list { list-style: none; margin: 20px 0; } 
+        .log-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #1F2937; font-size: 0.9rem; }
+        .log-date { color: var(--text-muted); font-family: monospace; width: 55px; }
+        .log-track { flex: 1; margin: 0 15px; height: 6px; background: #1F2937; border-radius: 3px; overflow: hidden; }
+        .log-fill { height: 100%; background: var(--accent-cyan); }
+        .log-dist { font-weight: 800; color: #fff; width: 65px; text-align: right; }
+
+        .quick-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-add { 
+            background: var(--accent-teal); color: #000; font-weight: 900; 
+            border: none; padding: 0 24px; border-radius: 8px; cursor: pointer; 
+            white-space: nowrap; flex-shrink: 0; font-size: 0.95rem;
+        }
+
+        .emoji-picker { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 30px; }
+        .emoji-picker label { flex: 1; aspect-ratio: 1; background: #1A2234; border: 1px solid #2B374E; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; cursor: pointer; transition: all 0.2s; user-select: none;}
+        .emoji-picker input { display: none; }
+        .emoji-picker input:checked + label { border-color: var(--accent-cyan); background: rgba(0,242,254,0.1); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,242,254,0.2); }
+
+        /* [수정 반영] 슬라이더 조작 끊김 방지를 위해 터치 영역 및 레이어 우선순위 확실하게 개선 */
+        .slider-row { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; margin-bottom: 8px; font-size: 0.88rem; font-weight: 700; pointer-events: none;}
+        .range-slider { 
+            width: 100%; -webkit-appearance: none; background: #1F2937; 
+            height: 8px; border-radius: 4px; outline: none; margin-bottom: 12px;
+            cursor: pointer; position: relative; z-index: 10; touch-action: none;
+        }
+        .range-slider::-webkit-slider-thumb { 
+            -webkit-appearance: none; width: 22px; height: 22px; 
+            border-radius: 50%; background: var(--text-muted); cursor: pointer; 
+            transition: background 0.2s, transform 0.1s;
+        }
+        .range-slider:active::-webkit-slider-thumb { background: var(--accent-cyan); transform: scale(1.15); box-shadow: 0 0 12px var(--accent-cyan); }
+
+        .stat-bar-box { margin-bottom: 18px; }
+        .stat-bar-track { width: 100%; height: 8px; background: #1F2937; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+        .stat-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+
+        .recommend-box { margin-top: 30px; padding: 25px; border: 1px solid #1e3a5f; background: rgba(0, 242, 254, 0.04); border-radius: 12px; text-align: center; }
+
+        .spot-list { display: flex; flex-direction: column; gap: 16px; }
+        .spot-card {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 24px 30px;
+            background: linear-gradient(90deg, var(--spot-grad) 0%, var(--card-bg) 42%);
+            border: 1px solid var(--card-border); border-radius: 16px; transition: all 0.25s ease;
+        }
+        .spot-card:hover { border-color: var(--spot-color); transform: translateX(8px); }
+        .spot-num { font-family: monospace; font-size: 1.8rem; font-weight: 900; color: var(--spot-color); width: 50px; flex-shrink: 0; }
+        .spot-info { flex: 1; margin: 0 20px; }
+        .spot-info h4 { color: #fff; font-size: 1.2rem; margin-bottom: 6px; }
+        .spot-info p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px; }
+        .spot-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+        .spot-tags span {
+            font-size: 0.75rem; font-weight: 700; color: var(--spot-color);
+            background: rgba(255,255,255,0.03); border: 1px solid var(--spot-color);
+            padding: 3px 12px; border-radius: 20px; opacity: 0.85;
+        }
+        .spot-dist { text-align: right; flex-shrink: 0; }
+        .spot-dist .d-val { display: block; font-size: 1.8rem; font-weight: 900; color: #fff; line-height: 1; }
+        .spot-dist .d-unit { font-size: 0.75rem; color: var(--text-muted); }
+
+        @media (max-width: 640px) {
+            .spot-card { flex-direction: column; align-items: flex-start; gap: 15px; padding: 20px; }
+            .spot-dist { align-self: flex-end; }
+        }
+
+        .scroll-top-btn {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 46px; height: 46px; background: var(--card-bg);
+            border: 1px solid var(--accent-cyan); color: var(--accent-cyan);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; z-index: 9999; box-shadow: 0 0 15px rgba(0,242,254,0.3);
+            opacity: 0; pointer-events: none; transition: all 0.3s ease;
+        }
+        .scroll-top-btn.show { opacity: 1; pointer-events: auto; }
+        .scroll-top-btn:hover { background: var(--accent-cyan); color: #000; transform: translateY(-4px); }
+
+        footer { text-align: center; padding: 60px 20px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 0.85rem; }
+
+        .show { animation: cardEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes cardEnter { from {opacity:0; transform:translateY(30px);} to {opacity:1; transform:translateY(0);} }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="#home"><h1>STRIDE</h1></a>
+            <nav>
+                <ul>
+                    <li><a href="#manual">MANUAL</a></li>
+                    <li><a href="#diary">DIARY</a></li>
+                    <li><a href="#tracker">CONDITION</a></li>
+                    <li><a href="#health">HEALTH</a></li>
+                    <li><a href="#places">SPOTS</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero-section">
+        <div class="hero-bg-slider">
+            <div class="hero-slide hero-slide-1"></div>
+            <div class="hero-slide hero-slide-2"></div>
+            <div class="hero-slide hero-slide-3"></div>
+        </div>
+        <div class="hero-content">
+            <h2>STEP TO MASTER RUNNER</h2>
+            <p>한계를 돌파하는 데이터 드리븐 러닝 솔루션</p>
+        </div>
+    </section>
+
+    <!-- [ 1. MANUAL ] -->
+    <section id="manual" class="content-section">
+        <div class="sec-header">
+            <span class="sec-num">01 — RUNNING MANUAL</span>
+            <h3 class="sec-title">올바른 러닝 자세 가이드</h3>
+            <p class="sec-desc">부상 없이 더 멀리 달리기 위한 가장 기초적이고 핵심적인 메커니즘입니다.</p>
+            <div class="sec-bar"></div>
+        </div>
+        
+        <div class="manual-box">
+            <div class="manual-item" style="border-left: 4px solid var(--accent-cyan)">
+                <h4 style="color: var(--accent-cyan);">상체 각도 및 시선</h4>
+                <p>허리를 곧게 펴고 몸통을 지면에서 5도 정도 앞으로 미세하게 기울입니다. 시선은 전방 20m를 툭 주시하여 목 피로를 차단합니다.</p>
+            </div>
+            <div class="manual-item" style="border-left: 4px solid var(--accent-teal)">
+                <h4 style="color: var(--accent-teal);">L자 팔치기 릴렉스</h4>
+                <p>어깨 승모근의 힘을 빼고 주먹은 계란 쥐듯 쥡니다. 팔꿈치 각도를 90도로 고정하고 골반을 스치듯 뒤로 경쾌하게 쳐줍니다.</p>
+            </div>
+            <div class="manual-item" style="border-left: 4px solid var(--accent-orange)">
+                <h4 style="color: var(--accent-orange);">안정적인 미드풋 착지</h4>
+                <p>발뒤꿈치 충격 착지가 아닌 발바닥 넓은 면적 중앙으로 딛는 미드풋 착지를 유지합니다. 소리 없이 사뿐하게 디뎌야 합니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- [ 2. DIARY & RECORD ] -->
+    <section id="diary" class="content-section">
+        <div class="sec-header">
+            <span class="sec-num">02 — RUNNING DIARY</span>
+            <h3 class="sec-title">러닝 다이어리</h3>
+            <p class="sec-desc">완주 기록을 쌓고, 소모 칼로리를 계산해 나만의 러닝 히스토리를 만들어보세요.</p>
+            <div class="sec-bar"></div>
+        </div>
+
+        <div class="cyber-grid">
+            <div class="cyber-card">
+                <h4 style="color:var(--accent-teal); margin-bottom:22px; display:flex; align-items:center; gap:8px;">🔥 칼로리 계산기</h4>
+                <div class="form-group">
+                    <label>체중 (KG)</label>
+                    <input id="calc-weight" type="number" class="form-input" placeholder="예: 65">
+                </div>
+                <div class="form-group">
+                    <label>거리 (KM)</label>
+                    <input id="calc-dist" type="number" class="form-input" placeholder="예: 5" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>페이스</label>
+                    <select id="calc-pace" class="form-input">
+                        <option value="65">가볍게 (7~8 min/km)</option>
+                        <option value="70" selected>보통 (6~7 min/km)</option>
+                        <option value="80">빠르게 (4~5 min/km)</option>
+                    </select>
+                </div>
+                <button onclick="calculateCalorie()" class="btn-action" style="margin-top:10px;">칼로리 계산하기</button>
+                <div id="cal-result-text" style="text-align:center; margin-top:18px; font-weight:800; color:var(--accent-cyan); font-size:1.1rem; display:none;"></div>
+            </div>
+
+            <div class="cyber-card">
+                <h4 style="color:var(--accent-teal); margin-bottom:10px;">📋 최근 러닝 기록</h4>
+                <ul id="run-log-list" class="log-list"></ul>
+                
+                <form id="quick-add-form" class="quick-row" onsubmit="addQuickRun(event)">
+                    <input id="quick-input" type="number" step="0.1" class="form-input" placeholder="오늘 거리 (km)" required>
+                    <button type="submit" class="btn-add">추가</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- [ 3. CONDITION TRACKER ] -->
+    <section id="tracker" class="content-section">
+        <div class="sec-header">
+            <span class="sec-num">03 — CONDITION TRACKER</span>
+            <h3 class="sec-title">러닝 컨디션 게이지</h3>
+            <p class="sec-desc">오늘의 컨디션을 기록하고, 신체 상태 변화를 추적하여 최적의 러닝 타이밍을 찾아보세요.</p>
+            <div class="sec-bar"></div>
+        </div>
+
+        <div class="stack-grid">
+            <div class="cyber-card">
+                <h4 style="color:var(--accent-teal); margin-bottom:20px;">오늘 컨디션 입력</h4>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">전반적인 몸 상태는?</p>
+                
+                <div class="emoji-picker">
+                    <label><input type="radio" name="feel" value="😴"><span>😴</span></label>
+                    <label><input type="radio" name="feel" value="😕"><span>😕</span></label>
+                    <label><input type="radio" name="feel" value="😐"><span>😐</span></label>
+                    <label><input type="radio" name="feel" value="😊" checked><span>😊</span></label>
+                    <label><input type="radio" name="feel" value="🔥"><span>🔥</span></label>
+                </div>
+
+                <div class="slider-row"><span>체력</span><span id="v-energy" style="font-family:monospace">100</span></div>
+                <input type="range" id="s-energy" class="range-slider" value="100" min="0" max="100" oninput="syncCondition()">
+
+                <!-- [수정 반영] 수면 질 -> 수면의 질 변경 -->
+                <div class="slider-row"><span>수면의 질</span><span id="v-sleep" style="font-family:monospace">0</span></div>
+                <input type="range" id="s-sleep" class="range-slider" value="0" min="0" max="100" oninput="syncCondition()">
+
+                <div class="slider-row"><span>근육 피로도</span><span id="v-muscle" style="font-family:monospace">100</span></div>
+                <input type="range" id="s-muscle" class="range-slider" value="100" min="0" max="100" oninput="syncCondition()">
+
+                <div class="slider-row"><span>정신적 에너지</span><span id="v-mental" style="font-family:monospace">23</span></div>
+                <input type="range" id="s-mental" class="range-slider" value="23" min="0" max="100" oninput="syncCondition()">
+
+                <div class="slider-row"><span>날씨 체감</span><span id="v-weather" style="font-family:monospace">34</span></div>
+                <input type="range" id="s-weather" class="range-slider" value="34" min="0" max="100" oninput="syncCondition()">
+
+                <button onclick="alert('오늘의 컨디션 지표가 업데이트되었습니다.')" class="btn-action" style="background:#132337; border-color:var(--accent-cyan); color:#fff; margin-top:15px;">오늘 컨디션 저장 ✓</button>
+            </div>
+
+            <div class="cyber-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                    <div class="stat-bar-box">
+                        <div class="slider-row" style="margin-top:0"><span style="color:var(--text-muted)">체력 (Energy)</span><span id="out-energy" style="color:var(--accent-cyan)">100%</span></div>
+                        <div class="stat-bar-track"><div id="bar-energy" class="stat-bar-fill" style="width:100%; background:var(--accent-cyan)"></div></div>
+                    </div>
+                    <div class="stat-bar-box">
+                        <div class="slider-row" style="margin-top:0"><span style="color:var(--text-muted)">수면 (Sleep)</span><span id="out-sleep" style="color:#4B5563">0%</span></div>
+                        <div class="stat-bar-track"><div id="bar-sleep" class="stat-bar-fill" style="width:0%; background:#3B82F6"></div></div>
+                    </div>
+                    <div class="stat-bar-box">
+                        <div class="slider-row" style="margin-top:0"><span style="color:var(--text-muted)">근육 피로 (Muscle)</span><span id="out-muscle" style="color:var(--accent-orange)">100%</span></div>
+                        <div class="stat-bar-track"><div id="bar-muscle" class="stat-bar-fill" style="width:100%; background:var(--accent-orange)"></div></div>
+                    </div>
+                    <div class="stat-bar-box">
+                        <div class="slider-row" style="margin-top:0"><span style="color:var(--text-muted)">멘탈 (Mental)</span><span id="out-mental" style="color:var(--accent-purple)">23%</span></div>
+                        <div class="stat-bar-track"><div id="bar-mental" class="stat-bar-fill" style="width:23%; background:var(--accent-purple)"></div></div>
+                    </div>
+                    <div class="stat-bar-box">
+                        <div class="slider-row" style="margin-top:0"><span style="color:var(--text-muted)">날씨 적합도 (Weather)</span><span id="out-weather" style="color:var(--accent-red)">34%</span></div>
+                        <div class="stat-bar-track"><div id="bar-weather" class="stat-bar-fill" style="width:34%; background:var(--accent-red)"></div></div>
+                    </div>
+                </div>
+
+                <div class="recommend-box">
+                    <span style="font-size:0.8rem; color:var(--text-muted); display:block; margin-bottom:8px;">오늘의 러닝 추천 강도</span>
+                    <div id="rec-display" style="font-size:1.8rem; font-weight:900; color:#fff; letter-spacing:-1px;">
+                        😴 오늘은 휴식 권장
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [ 4. HEALTH REPORT ] -->
+    <section id="health" class="content-section">
+        <div class="sec-header">
+            <span class="sec-num">04 — HEALTH REPORT</span>
+            <h3 class="sec-title">러닝 건강 리포트</h3>
+            <p class="sec-desc">달릴 때 내 몸속에서 일어나는 신비로운 생물학적 업그레이드 과정입니다.</p>
+            <div class="sec-bar"></div>
+        </div>
+        <div class="cyber-grid">
+            <div class="cyber-card"><div style="font-size:2rem; margin-bottom:10px">🧠</div><h4 style="color:#fff; margin-bottom:8px">도파민 & 신경 가소성</h4><p style="font-size:0.9rem; color:var(--text-muted)">30분 이상 주행 시 내인성 칸나비노이드가 분비되어 뇌의 스트레스를 초기화하고 해마의 기억 세포를 새로 구축합니다.</p></div>
+            <div class="cyber-card"><div style="font-size:2rem; margin-bottom:10px">🫀</div><h4 style="color:#fff; margin-bottom:8px">좌심실 박출량 극대화</h4><p style="font-size:0.9rem; color:var(--text-muted)">심장 근육 비대를 통해 1회 박동당 산소 공급 효율이 상승하며 온몸의 모세혈관 네트워크가 정화됩니다.</p></div>
+            <div class="cyber-card"><div style="font-size:2rem; margin-bottom:10px">🦴</div><h4 style="color:#fff; margin-bottom:8px">하체 골밀도 리모델링</h4><p style="font-size:0.9rem; color:var(--text-muted)">규칙적인 착지 충격은 조골세포를 자극해 뼈를 강철처럼 단단하게 만들고 아킬레스건의 스프링 탄성을 길러줍니다.</p></div>
+        </div>
+    </section>
+
+    <!-- [ 5. SPOTS ] -->
+    <section id="places" class="content-section">
+        <div class="sec-header">
+            <span class="sec-num">05 — TOP RUNNING SPOTS</span>
+            <h3 class="sec-title">대한민국 대표 러닝 코스</h3>
+            <p class="sec-desc">전국의 러너들이 선택한 최고의 러닝 코스를 소개합니다.</p>
+            <div class="sec-bar"></div>
+        </div>
+
+        <div class="spot-list">
+            <div class="spot-card" style="--spot-color: var(--accent-cyan); --spot-grad: rgba(0, 242, 254, 0.12);">
+                <div class="spot-num">01</div>
+                <div class="spot-info">
+                    <h4>여의도 한강공원 🌉</h4>
+                    <p>멈춤 없이 직선 질주가 가능한 러너들의 본진입니다.</p>
+                    <div class="spot-tags"><span>#서울</span><span>#직선코스</span><span>#평탄</span><span>#한강뷰</span></div>
+                </div>
+                <div class="spot-dist"><span class="d-val">10</span><span class="d-unit">km 코스</span></div>
+            </div>
+
+            <div class="spot-card" style="--spot-color: var(--accent-teal); --spot-grad: rgba(16, 185, 129, 0.12);">
+                <div class="spot-num">02</div>
+                <div class="spot-info">
+                    <h4>성수동 서울숲 🌳</h4>
+                    <p>부드러운 흙길 트랙이 깔린 도심 속 포토존 성지입니다.</p>
+                    <div class="spot-tags"><span>#서울</span><span>#공원</span><span>#흙길트랙</span><span>#초보자</span></div>
+                </div>
+                <div class="spot-dist"><span class="d-val">1.5</span><span class="d-unit">km 코스</span></div>
+            </div>
+
+            <div class="spot-card" style="--spot-color: var(--accent-orange); --spot-grad: rgba(249, 115, 22, 0.12);">
+                <div class="spot-num">03</div>
+                <div class="spot-info">
+                    <h4>광교 호수공원 🌃</h4>
+                    <p>수면에 비치는 LED 야경이 환상적인 나이트 런 메카입니다.</p>
+                    <div class="spot-tags"><span>#수원</span><span>#호수</span><span>#야경</span><span>#나이트런</span></div>
+                </div>
+                <div class="spot-dist"><span class="d-val">7</span><span class="d-unit">km 코스</span></div>
+            </div>
+
+            <div class="spot-card" style="--spot-color: var(--accent-red); --spot-grad: rgba(239, 68, 68, 0.12);">
+                <div class="spot-num">04</div>
+                <div class="spot-info">
+                    <h4>해운대 동백섬 🌊</h4>
+                    <p>파도 소리를 들으며 달리는 우레탄 트랙 오션뷰 코스입니다.</p>
+                    <div class="spot-tags"><span>#부산</span><span>#해변</span><span>#우레탄</span><span>#일출</span></div>
+                </div>
+                <div class="spot-dist"><span class="d-val">0.9</span><span class="d-unit">km 코스</span></div>
+            </div>
+        </div>
+    </section>
+
+    <footer><p>© 2026 STRIDE : STEP TO MASTER RUNNER.</p></footer>
+
+    <a href="#home" class="scroll-top-btn" id="scrollTopBtn">▲</a>
+
+   <script>
+        let runLogs = [
+            { date: '06.28', dist: 9.0 }, { date: '06.25', dist: 5.0 },
+            { date: '06.22', dist: 7.0 }, { date: '06.19', dist: 4.0 }, { date: '06.15', dist: 10.0 }
+        ];
+
+        function renderLogs() {
+            const listEl = document.getElementById('run-log-list');
+            listEl.innerHTML = '';
+            runLogs.slice(0, 5).forEach(log => {
+                const pct = Math.min(100, Math.round((log.dist / 12) * 100)); 
+                listEl.innerHTML += `
+                    <li class="log-item">
+                        <span class="log-date">${log.date}</span>
+                        <div class="log-track"><div class="log-fill" style="width:${pct}%"></div></div>
+                        <span class="log-dist">${log.dist.toFixed(1)}KM</span>
+                    </li>`;
+            });
+        }
+
+        function addQuickRun(e) {
+            e.preventDefault();
+            const val = parseFloat(document.getElementById('quick-input').value);
+            if(!val) return;
+            const d = new Date();
+            const todayStr = `${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+            runLogs.unshift({ date: todayStr, dist: val });
+            renderLogs();
+            document.getElementById('quick-add-form').reset();
+        }
+
+        function calculateCalorie() {
+            const w = parseFloat(document.getElementById('calc-weight').value) || 65;
+            const d = parseFloat(document.getElementById('calc-dist').value) || 5;
+            const p = parseFloat(document.getElementById('calc-pace').value);
+            const burned = Math.round(w * d * (p/70) * 1.036);
+            
+            const resEl = document.getElementById('cal-result-text');
+            resEl.style.display = 'block';
+            resEl.innerText = `예상 소모량 : 약 ${burned} kcal`;
+        }
+
+        function syncCondition() {
+            const e = document.getElementById('s-energy').value;
+            const s = document.getElementById('s-sleep').value;
+            const m = document.getElementById('s-muscle').value;
+            const men = document.getElementById('s-mental').value;
+            const w = document.getElementById('s-weather').value;
+
+            document.getElementById('v-energy').innerText = e;
+            document.getElementById('v-sleep').innerText = s;
+            document.getElementById('v-muscle').innerText = m;
+            document.getElementById('v-mental').innerText = men;
+            document.getElementById('v-weather').innerText = w;
+
+            document.getElementById('bar-energy').style.width = e + '%';
+            document.getElementById('out-energy').innerText = e + '%';
+
+            document.getElementById('bar-sleep').style.width = s + '%';
+            document.getElementById('out-sleep').innerText = s + '%';
+            document.getElementById('out-sleep').style.color = s > 0 ? '#3B82F6' : '#4B5563';
+
+            document.getElementById('bar-muscle').style.width = m + '%';
+            document.getElementById('out-muscle').innerText = m + '%';
+
+            document.getElementById('bar-mental').style.width = men + '%';
+            document.getElementById('out-mental').innerText = men + '%';
+
+            document.getElementById('bar-weather').style.width = w + '%';
+            document.getElementById('out-weather').innerText = w + '%';
+
+            const avg = (Number(e) + Number(s) + Number(m) + Number(men) + Number(w)) / 5;
+            const recEl = document.getElementById('rec-display');
+            
+            if (avg < 40) {
+                recEl.innerHTML = '<span style="color:#EF4444">😴 오늘은 휴식 권장</span>';
+            } else if (avg < 75) {
+                recEl.innerHTML = '<span style="color:var(--accent-cyan)">🏃 가벼운 존2 조깅 추천</span>';
+            } else {
+                recEl.innerHTML = '<span style="color:var(--accent-teal)">🔥 고강도 인터벌 러닝 최적기!</span>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderLogs();
+            syncCondition(); 
+
+            const scrollBtn = document.getElementById('scrollTopBtn');
+            const header = document.querySelector('header'); // [추가됨] 헤더 요소 선택
+            let lastScrollY = window.scrollY;                // [추가됨] 이전 스크롤 위치 기억용
+
+            window.addEventListener('scroll', () => {
+                const currentScrollY = window.scrollY;
+
+                // 1. 탑 버튼 표시 로직 (기존 유지)
+                if (currentScrollY > 300) scrollBtn.classList.add('show');
+                else scrollBtn.classList.remove('show');
+
+                // 2. [추가됨] 스마트 헤더 로직
+                if (currentScrollY <= 0) {
+                    // 페이지 최상단일 때는 항상 헤더 표시
+                    header.classList.remove('hide-header');
+                } else if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                    // 아래로 스크롤 중 & 헤더 높이(약 80px) 이상 내려갔을 때 -> 숨김
+                    header.classList.add('hide-header');
+                } else {
+                    // 위로 스크롤 올릴 때 -> 나타남
+                    header.classList.remove('hide-header');
+                }
+
+                lastScrollY = currentScrollY; // 현재 스크롤 위치를 다음 비교를 위해 저장
+            });
+
+            const obs = new IntersectionObserver(e => {
+                e.forEach(entry => entry.isIntersecting && entry.target.classList.add('show'));
+            }, {threshold: 0.05});
+            document.querySelectorAll('.cyber-card, .manual-box, .spot-card').forEach(el => obs.observe(el));
+        });
+    </script>
+</body>
+</html>
